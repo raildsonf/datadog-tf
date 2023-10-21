@@ -1,0 +1,62 @@
+datadog:
+  kubelet:
+    tlsVerify: false
+  logs:
+    enabled: true
+    containerCollectAll: true
+  apm:
+    enabled: true
+  podLabelsAsTags:
+    app.kubernetes.io/name: app
+  env:
+    - name: DD_CHECKS_TAG_CARDINALITY
+      value: orchestrator
+  orchestratorExplorer:
+    enabled: true
+    container_scrubbing:
+      enabled: true
+  leaderElection: true
+  logLevel: INFO
+  nonLocalTraffic: true
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 20m
+      memory: 20Mi
+  tags:
+  - cloud:azure
+  - distribution:aks
+  - cluster_env:test
+  useDogStatsDSocketVolume: true
+providers:
+  aks:
+    enabled: true
+agents:
+  enabled: true
+  image:
+    name: agent
+    tag: latest
+clusterAgent:
+  enabled: true
+  metricsProvider:
+    enabled: true
+  clusterChecks:
+    enabled: true
+  rbac:
+    create: true
+daemonset:
+  useHostPort: true
+deployment:
+  enabled: true
+image:
+  repository: datadog/agent
+  tag: latest-jmx
+kube-state-metrics:
+  rbac:
+    create: true
+rbac:
+  create: true
+service:
+  type: ClusterIP
