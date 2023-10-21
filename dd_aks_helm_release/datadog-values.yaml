@@ -19,6 +19,8 @@ datadog:
     enabled: true
     container_scrubbing:
       enabled: true
+  processAgent:
+    enabled: true
   leaderElection: true
   logLevel: INFO
   nonLocalTraffic: true
