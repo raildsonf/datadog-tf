@@ -1,12 +1,12 @@
-resource "datadog_monitor" "system_disk_used" {
-  name           = "System Disk Used"
-  query          = "avg(last_5m):avg:system.disk.used{*} by {host} * 100 > ${var.system_disk_used["critical"]}"
+resource "datadog_monitor" "system_disk_utilized" {
+  name           = "System Disk Utilized by host"
+  query          = "avg(last_5m):avg:system.disk.utilized{device:/dev/sda3} by {host} > ${var.system_disk_utilized["critical"]}"
   type           = "metric alert"
   notify_no_data = false
   include_tags   = true
   monitor_thresholds {
-    warning  = var.system_disk_used["warning"]
-    critical = var.system_disk_used["critical"]
+    warning  = var.system_disk_utilized["warning"]
+    critical = var.system_disk_utilized["critical"]
   }
   message = <<EOM
                     {{#is_alert}}

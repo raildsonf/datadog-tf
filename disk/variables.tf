@@ -10,11 +10,12 @@ variable "datadog_api_url" {
   default = "https://us5.datadoghq.com/"
 }
 
-variable "system_disk_used" {
+variable "system_disk_utilized" {
   type = map(string)
   default = {
     critical = 90
     warning  = 85
+    ok = 84
   }
 }
 
