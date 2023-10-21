@@ -21,6 +21,6 @@ variable "system_disk_utilized" {
 
 variable "datadog_alert_footer" {
   default = <<EOF
-            @raildsonfelipe@outlook.com 
+            @rf@outlook.com
             EOF
 }
