@@ -1,7 +1,7 @@
 resource "helm_release" "datadog-agent" {
   chart      = "datadog"
   name       = "datadog-agent"
-  namespace  = "datadog"
+  namespace  = "datadog-agent"
   create_namespace = true
   repository = "https://helm.datadoghq.com"
 

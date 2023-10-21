@@ -11,6 +11,10 @@ datadog:
   env:
     - name: DD_CHECKS_TAG_CARDINALITY
       value: orchestrator
+    - name: DD_HOSTNAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
   orchestratorExplorer:
     enabled: true
     container_scrubbing:
