@@ -3,7 +3,7 @@ locals {
 }
 
 #disk
-resource "datadog_monitor" "system_disk_utilized" {
+resource "datadog_monitor" "system_disk_utilization" {
   name           = "System Disk utilization by host"
   query          = "avg(last_5m):avg:system.disk.utilized{device:/dev/sda3} by {host} > ${var.system_utilized["critical"]}"
   type           = "metric alert"
@@ -34,7 +34,7 @@ resource "datadog_monitor" "system_disk_utilized" {
 }
 
 #CPU
-resource "datadog_monitor" "system_cpu_utilized" {
+resource "datadog_monitor" "system_cpu_utilization" {
   name         = "System CPU utilization by host"
   type         = "query alert"
   query        = "avg(last_5m):avg:system.cpu.user{*} by {host} > ${var.system_utilized["critical"]}"
