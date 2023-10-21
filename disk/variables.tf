@@ -14,13 +14,12 @@ variable "system_disk_utilized" {
   type = map(string)
   default = {
     critical = 90
-    warning  = 85
-    ok = 84
+    warning  = 80
   }
 }
 
 variable "datadog_alert_footer" {
   default = <<EOF
-            @rf@outlook.com
+            @raildsonfelipe@outlook.com
             EOF
 }

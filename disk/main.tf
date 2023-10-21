@@ -10,11 +10,11 @@ resource "datadog_monitor" "system_disk_utilized" {
   }
   message = <<EOM
                     {{#is_alert}}
-                    Drive Usage is {{value}}.
+                    Root Usage is {{value}}%.
                     {{/is_alert}} 
 
                     {{#is_recovery}}
-                    Drive Usage returned to a safe state, {{value}}.
+                    Root Usage returned to a safe state, {{value}}%.
                     {{/is_recovery}}
                     ${var.datadog_alert_footer}
                   EOM
