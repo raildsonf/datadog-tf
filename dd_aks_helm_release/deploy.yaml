@@ -1,0 +1,119 @@
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: redis-primary
+  labels:
+    app: redis
+    role: primary
+spec:
+  replicas: 1
+  selector:
+    app: redis
+    role: primary
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: primary
+    spec:
+      containers:
+      - name: redis-primary
+        image: redis:2.8.23
+        ports:
+        - name: redis-server
+          containerPort: 6379
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis-primary
+  labels:
+    app: redis
+    role: primary
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis-server
+  selector:
+    app: redis
+    role: primary
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  name: redis-replica
+  labels:
+    app: redis
+    role: replica
+spec:
+  replicas: 2
+  selector:
+    app: redis
+    role: replica
+  template:
+    metadata:
+      labels:
+        app: redis
+        role: replica
+    spec:
+      containers:
+      - name: redis-replica
+        image: k8s.gcr.io/redis-slave:v2
+        ports:
+        - name: redis-server
+          containerPort: 6379
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis-replica
+  labels:
+    app: redis
+    role: replica
+spec:
+  ports:
+  - port: 6379
+    targetPort: redis-server
+  selector:
+    app: redis
+    role: replica
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: guestbook
+spec:
+  selector:
+    matchLabels:
+      app: guestbook
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: guestbook
+    spec:
+      containers:
+      - name: guestbook
+        image: mallorym/gob-guestbook:latest
+        ports:
+        - name: expvar-server
+          containerPort: 2999
+          protocol: TCP
+        - name: http-server
+          containerPort: 3000
+          protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: guestbook
+  labels:
+    app: guestbook
+spec:
+  ports:
+  - port: 3000
+    targetPort: http-server
+  selector:
+    app: guestbook
+  type: LoadBalancer

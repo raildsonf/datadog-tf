@@ -1,7 +1,7 @@
-resource "helm_release" "datadog-agent" {
+resource "helm_release" "datadog" {
   chart      = "datadog"
-  name       = "datadog-agent"
-  namespace  = "datadog-agent"
+  name       = "datadog"
+  namespace  = "datadog"
   create_namespace = true
   repository = "https://helm.datadoghq.com"
 
@@ -14,8 +14,8 @@ resource "helm_release" "datadog-agent" {
     value = var.datadog_app_key
   }
   set {
-    name  = "datadog.dd_url"
-    value = var.datadog_api_url
+    name  = "datadog.site"
+    value = var.datadog_site
   }
   set {
     name = "targetSystem"

@@ -1,68 +1,61 @@
+registry: docker.io/datadog
+providers: #aks specific configuration to prevent an error when reconciling the webhook
+  aks:
+    enabled: true
 datadog:
-  kubelet:
-    tlsVerify: false
-  logs:
-    enabled: true
-    containerCollectAll: true
-  apm:
-    enabled: true
-  podLabelsAsTags:
-    app.kubernetes.io/name: app
   env:
-    - name: DD_CHECKS_TAG_CARDINALITY
-      value: orchestrator
     - name: DD_HOSTNAME
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
-  orchestratorExplorer:
+  securityContext:
+    runAsUser: 1000
+  kubelet: #aks specific configuration due to how AKS has setup the SSL
+    tlsVerify: false
+  apm: # datadog.apm.portEnabled -- Enable APM over TCP communication (port 8126 by default)
+    portEnabled: true
+  logLevel: INFO #logging verbosity, valid log levels are: trace, debug, info, warn, error, critical, off
+  logs:
+     enabled: true
+     containerCollectAll: true #allow log collection for all containers
+  collectEvents: true
+  networkMonitoring: #Enable NPM collection
     enabled: true
-    container_scrubbing:
-      enabled: true
-  processAgent:
+  logs: #Enable log collection
     enabled: true
-  leaderElection: true
-  logLevel: INFO
-  nonLocalTraffic: true
+    containerCollectAll: true
+  processAgent: #real-time visibility into the process running on. Set to true to use orchestratorExplorer
+    enabled: true
+  orchestratorExplorer: #monitor the state of pods, deployments, and other Kubernetes concepts in a specific namespace or availability zone, view resource specifications for failed pods within a deployment, correlate node activity with related logs
+    enabled: true
+  kubeStateMetricsEnabled:
+    enabled: true
   resources:
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 20m
-      memory: 20Mi
-  tags:
-  - cloud:azure
-  - distribution:aks
-  - cluster_env:test
-  useDogStatsDSocketVolume: true
-providers:
-  aks:
-    enabled: true
-agents:
+   requests:
+     cpu: 20m
+     memory: 25Mi
+   limits:
+     cpu: 200m
+     memory: 256Mi
+clusterAgent: #collecting cluster level monitoring data - datadog.collectEvents to true
   enabled: true
+  replicas: 2
+  createPodDisruptionBudget: true
   image:
-    name: agent
+    name: cluster-agent
     tag: latest
-clusterAgent:
-  enabled: true
+  containers:
+    clusterAgent:
+      securityContext:
+        allowPrivilegeEscalation: false
   metricsProvider:
-    enabled: true
-  clusterChecks:
-    enabled: true
-  rbac:
+    enabled: true #Enable the metricsProvider to be able to scale based on metrics in Datadog
+  rbac: 
     create: true
-daemonset:
-  useHostPort: true
-deployment:
-  enabled: true
-image:
-  repository: datadog/agent
-  tag: latest-jmx
-kube-state-metrics:
-  rbac:
-    create: true
-rbac:
-  create: true
-service:
-  type: ClusterIP
+  resources:
+   requests:
+     cpu: 20m
+     memory: 25Mi
+   limits:
+     cpu: 200m
+     memory: 256Mi
