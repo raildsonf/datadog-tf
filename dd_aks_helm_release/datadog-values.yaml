@@ -8,8 +8,6 @@ datadog:
       valueFrom:
         fieldRef:
           fieldPath: spec.nodeName
-  securityContext:
-    runAsUser: 1000
   kubelet: #aks specific configuration due to how AKS has setup the SSL
     tlsVerify: false
   apm: # datadog.apm.portEnabled -- Enable APM over TCP communication (port 8126 by default)
