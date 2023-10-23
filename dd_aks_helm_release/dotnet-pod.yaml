@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sample
+  labels:
+    app: sample
+    tags.datadoghq.com/env: "prod"
+    tags.datadoghq.com/service: "sample"
+    tags.datadoghq.com/version: "1.1"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: sample
+      labels:
+        app: sample
+        tags.datadoghq.com/env: "prod" # Unified service tag - Pod Env tag
+        tags.datadoghq.com/service: "sample" # Unified service tag - Pod Service tag
+        tags.datadoghq.com/version: "1.1" # Unified service tag - Pod Version tag
+        admission.datadoghq.com/enabled: "true" # Enable Admission Controller to mutate new pods part of this deployment
+      annotations:
+        admission.datadoghq.com/dotnet-lib.version: "latest"
+    spec:
+      containers:
+      - name: sample
+        image: devstackhub/hello-world-dotnet
+        resources:
+          limits:
+            cpu: 1
+            memory: 800M
+          requests:
+            cpu: .1
+            memory: 300M
+        ports:
+          - containerPort: 80
+  selector:
+    matchLabels:
+      app: sample
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample
+spec:
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+  selector:
+    app: sample
