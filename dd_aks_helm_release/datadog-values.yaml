@@ -12,16 +12,13 @@ datadog:
     tlsVerify: false
   apm: # datadog.apm.portEnabled -- Enable APM over TCP communication (port 8126 by default)
     portEnabled: true
-  logLevel: INFO #logging verbosity, valid log levels are: trace, debug, info, warn, error, critical, off
-  logs:
-     enabled: true
-     containerCollectAll: true #allow log collection for all containers
   collectEvents: true
   networkMonitoring: #Enable NPM collection
     enabled: true
+  logLevel: INFO #logging verbosity, valid log levels are: trace, debug, info, warn, error, critical, off
   logs: #Enable log collection
     enabled: true
-    containerCollectAll: true
+    containerCollectAll: true #allow log collection for all containers
   processAgent: #real-time visibility into the process running on. Set to true to use orchestratorExplorer
     enabled: true
   orchestratorExplorer: #monitor the state of pods, deployments, and other Kubernetes concepts in a specific namespace or availability zone, view resource specifications for failed pods within a deployment, correlate node activity with related logs
